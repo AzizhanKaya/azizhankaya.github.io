@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CherryTree HTML</title>
+  <style>
+    body {
+      background-color: #101010;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+    }
+
+
+
+    #sidebar {
+    float: left;
+    width: 200px;
+    height: auto;
+    max-width: 300px;
+    max-height: 1000px;
+    background-color: #222;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: -10px 20px 15px 0px rgba(0, 0, 0, 0.492);
+    overflow-x: auto;
+    overflow-y: auto;
+    transition: width 0.7s ease,background-color 0.5s ease;
+    z-index: 1;
+    }
+
+    #sidebar:hover {
+    width: 350px;
+    background-color: #383838;
+    }
+
+    
+
+
+    #nodes {
+      list-style-type: none;
+      padding-left: 10px;
+    }
+
+    
+
+    #content {
+      margin-left: 220px;
+      padding: 20px;
+      color: #fff;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .child-ul {
+      padding-left: 10px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease;
+      list-style-type: none;
+    }
+    
+
+    .node {
+      
+      padding: 7px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      position: relative;
+      border: 2px solid #4e4e4e;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    .icon{
+      display: inline-block;
+      vertical-align: top;
+      width: 20px; 
+      height: 20px;
+    }
+    
+    #divider {
+      width: 1px;
+      height: 630px;
+      background-color: #6b6b6b;
+      opacity: 0.5;
+      float: left;
+      margin-right: 5px;
+      
+    }
+    
+    
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+      <ul id="nodes">
+          <li class="node" style="background-color: rgb(51, 51, 51);"><div class="icon">+</div>Node 1
+              <ul class="child-ul">
+                  <li class="node" style="background-color: rgb(68, 68, 68);"><div class="icon">+</div>Node 1.1
+                      <ul class="child-ul">
+                          <li class="node" style="background-color: rgb(85, 85, 85);"><div class="icon">+</div>Node 1.1.1
+                            <ul class="child-ul">
+                              <li class="node" style="background-color: rgb(109, 109, 109);"><div class="icon">+</div>Node 1.1.1.1</li>
+                            </ul>
+                          </li>
+                          <li class="node" style="background-color: rgb(85, 85, 85);"><div class="icon">+</div>Node 1.1.2</li>
+                      </ul>
+                  </li>
+                  <li class="node" style="background-color: rgb(68, 68, 68);"><div class="icon">+</div>Node 1.2</li>
+              </ul>
+          </li>
+          <li class="node" style="background-color: rgb(51, 51, 51);"><div class="icon">+</div>Node 2</li>
+      </ul>
+  </div>
+  <div id="divider"></div>
+
+  <div id="content">
+
+
+  </rich_text><rich_text scale="h6">      Name: </rich_text><rich_text scale="h1" foreground="#f6f6d3d32d2d">Zipping</rich_text><rich_text scale="h1">
+    Ip:  </rich_text><rich_text scale="h1" foreground="#35358484e4e4">10.10.11.229</rich_text><rich_text scale="h1">
+    Difficulty: </rich_text><rich_text scale="h1" foreground="#ffffa3a34848">Medium</rich_text><rich_text>
+    Prepared by: Azizhan Kaya
+</rich_text>
+  </div>
+</body>
+
+
+<script>
+
+
+
+
+var nodes = document.querySelectorAll(".node");
+
+Array.from(nodes).forEach(node => {
+  addListener(node);
+});
+
+function addListener(node){
+  node.addEventListener("click",e =>{
+
+    e.stopPropagation();
+
+    showContent(node);
+  
+    }
+  )
+}
+
+
+
+var icons = document.querySelectorAll(".icon");
+
+Array.from(icons).forEach(icon => {
+    icon.addEventListener("click",e =>{
+
+      e.stopPropagation();
+
+      toggleExpand(icon.parentNode)
+      toggleIcon(icon);
+    }
+  )
+}
+);
+
+function toggleIcon(icon) {
+  icon.textContent = icon.textContent === "+" ? "-" : "+";
+}
+
+
+function toggleExpand(node){
+
+    let childUl = node.querySelector(".child-ul")
+    
+    
+    if(childUl){
+
+      childUl.classList.toggle("expanded");
+      expand_collapse(childUl);
+
+
+    }
+    
+};
+
+
+function expand_collapse(childUl){
+
+
+  
+  if(childUl.classList.contains("expanded")){
+
+
+  
+  let allUls = Array.from(document.querySelectorAll(".child-ul"));
+  let childUls = Array.from(childUl.querySelectorAll(".child-ul"));
+
+  let difference = allUls.filter(x => !childUls.includes(x)).reverse();
+  
+  let heightUl = 0;
+  difference.forEach(parentUl => {
+
+    heightUl += parentUl.scrollHeight;
+
+    parentUl.style.maxHeight = heightUl + "px";
+
+
+  })
+  
+  }
+  else{
+  let allUls = Array.from(document.querySelectorAll(".child-ul"));
+  let childUls = Array.from(childUl.querySelectorAll(".child-ul"));
+
+  let difference = allUls.filter(x => !childUls.includes(x)).reverse();
+  let heightUl = difference[0].scrollHeight;
+  difference.forEach(parentUl => {
+
+    parentUl.style.maxHeight = (parentUl.scrollHeight-heightUl) + "px";
+
+  })
+  }
+}
+
+  </script>
+</body>
+
+</html>
